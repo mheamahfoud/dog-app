@@ -21,11 +21,11 @@ class ImageCatchBloc extends Bloc<ImageCatchEvent, ImageCatchState> {
     //   emit(Loading());
     // emit(ImageLoadingState());
     // try{
-    final picker = ImagePicker();
-    var image = await picker.getImage(source: ImageSource.gallery);
-    if (image != null) {
-        emit(ImageLoadedState(image: File(image.path)));
-    }
+  //  final picker = ImagePicker();
+   // var image = await picker.getImage(source: ImageSource.gallery);
+   // if (image != null) {
+        emit(ImageLoadedState(image: event.image));
+   // }
 
     //  }
     // catch(e){

@@ -9,9 +9,9 @@ abstract class ImageCatchEvent extends Equatable {
 }
 
 class GetImageEvent extends ImageCatchEvent {
- // final File image ;
- // GetImageEvent({required this.image});
- //@override
- // List<Object> get props => [image];
+  final File image ;
+  GetImageEvent({required this.image});
+  @override
+  List<Object> get props => [image];
 }
 

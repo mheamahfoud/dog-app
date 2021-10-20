@@ -26,16 +26,16 @@ class DogBreedPage extends StatelessWidget {
             create: (BuildContext context) => BlocC(),
           ),*/
       ],
-      child: DogBreedPage1(),
+      child: DogBreedWidget(),
     );
     return BlocProvider<DogBreedBloc>(
       create: (_) => sl<DogBreedBloc>(),
-      child: DogBreedPage1(),
+      child: DogBreedWidget(),
     );
   }
 }
 
-class DogBreedPage1 extends StatelessWidget {
+class DogBreedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int _currentTap = 0;
@@ -59,7 +59,18 @@ class DogBreedPage1 extends StatelessWidget {
         iconSize: 40,
         onTap: (value) async {
           if (value == 2) {
-              context.read<ImageCatchBloc>().add(GetImageEvent());
+            final picker = ImagePicker();
+            var image = await picker.getImage(source: ImageSource.gallery);
+            if (image != null) {
+              context.read<ImageCatchBloc>().add(GetImageEvent(image:File(image.path)));
+            }
+          }
+          else if (value==1){
+            final picker = ImagePicker();
+            var image = await picker.getImage(source: ImageSource.camera);
+            if (image != null) {
+              context.read<ImageCatchBloc>().add(GetImageEvent(image:File(image.path)));
+            }
           }
         },
         items: [
@@ -93,14 +104,11 @@ class DogBreedPage1 extends StatelessWidget {
       ),
     );
   }
-
   Widget buildBody(BuildContext context) {
     BlocListener<ImageCatchBloc, ImageCatchState>(
         listener: (context, state) {
           if (state is ImageLoadedState) {
-
           }
-
         });
     return Center(
       child: Padding(
@@ -110,26 +118,21 @@ class DogBreedPage1 extends StatelessWidget {
             SizedBox(height: 10),
             BlocConsumer<ImageCatchBloc, ImageCatchState>(
                 listener: (context, state) {
-                  if (state is ImageLoadingState ) {
-                  print('beforrrrrrrrrrrrrrrrrrrrrrrrr');}
-
-                 else  if (state is ImageLoadedState ) {
+                 if (state is ImageLoadedState ) {
                     context.read<DogBreedBloc>().add(GetDogBreed(image: state.image));
-                  //print('afterrrrrrrrrrrrrrr');
                  }
-                  // do stuff here based on BlocA's state
                 },               // do stuff here based on BlocA's state
               builder: (BuildContext context, state) {
                 if (state is ImageLoadedState) {
-
                   return ImageDisplay(imageFile: state.image,
                   );
                 }
-                else if (state is ImageLoadingState) {
-
-                  return ImageDisplay(
-                    imageFile: null,
+                else if (state is ImageErrorState) {
+                  return  MessageDisplay(
+                    message: state.message,
+                    isError: true,
                   );
+
                 }
                 else
                   return ImageDisplay(
@@ -152,7 +155,6 @@ class DogBreedPage1 extends StatelessWidget {
                   isError: true,
                 );
               }
-
               return Text('');
             }),
           ],
@@ -161,10 +163,4 @@ class DogBreedPage1 extends StatelessWidget {
     );
   }
 
-  BlocProvider<DogBreedBloc> buildBody1(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<DogBreedBloc>(),
-      child: Text(''),
-    );
-  }
 }

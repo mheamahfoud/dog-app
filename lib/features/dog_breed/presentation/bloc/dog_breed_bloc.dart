@@ -23,18 +23,19 @@ class DogBreedBloc extends Bloc<DogBreedEvent, DogBreedState> {
     GetDogBreed event,
     Emitter<DogBreedState> emit,
   ) async {
+
     emit(Loading());
+
     imgLib.Image ? image = imgLib.decodeImage(File(event.image.path).readAsBytesSync());
-   /* final failureOrBreed = await dogBreed(
-      Params(image: image!),
-    );*/
+
     await Future.delayed(const Duration(milliseconds: 350));
-    emit(Loading());
-    var failureOrBreed = await dogBreed(
-      Params(image: image!),
-    );
+    var failureOrBreed = await dogBreed(Params(image: image!),   );
     if(failureOrBreed.isRight()){
       emit(Successed(result: failureOrBreed.toOption().toNullable()!));
+    }
+    else{
+      failureOrBreed.leftMap((l) => emit(Error(message: l.Message)))
+      ;
     }
 
    /* failureOrBreed.fold(

@@ -11,10 +11,6 @@ abstract class ImageCatchState extends Equatable {
 
 class InitState extends ImageCatchState {}
 
-class ImageLoadingState extends ImageCatchState {}
-
-
-
 class ImageLoadedState extends ImageCatchState {
   final File  image;
   ImageLoadedState({required this.image});
